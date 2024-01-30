@@ -53,8 +53,7 @@ class Server:
             }
         return self.__indexed_dataset
 
-    def get_hyper_index(self, index: Union[int, None] = None, page_size: int =
-                        10) -> Dict:
+    def get_hyper_index(self, index: int = None, page_size: int = 10) -> Dict:
         """
         Description:
         The goal here is that if between two queries, certain rows are removed
@@ -64,11 +63,9 @@ class Server:
         req_d: Dict[str, ValueType] = {}
         all_idxd_data = self.indexed_dataset()
 
-        idx = index or 0
-        print(idx)
+        idx = index
         tmp_d: List = []
-        assert (idx >= 0 and idx < len(all_idxd_data))
-
+        assert (type(idx) == int and idx >= 0 and idx < len(all_idxd_data))
         for k, v in all_idxd_data.items():
             if len(tmp_d) == (page_size + 1):
                 break
