@@ -4,6 +4,7 @@ A basic Flask app
 """
 from flask import Flask, render_template, request, g
 from flask_babel import Babel, _
+from typing import Dict, Optional
 
 
 class Config:
@@ -29,7 +30,7 @@ babel = Babel(app)
 
 
 @babel.localeselector
-def get_locale():
+def get_locale() -> str:
     """Determine what locale to use """
 
     inc_locale = request.args.get('locale')
@@ -40,7 +41,7 @@ def get_locale():
     return request.accept_languages.best_match(app.config['LANGUAGES'])
 
 
-def get_user():
+def get_user() -> Optional[Dict]:
     """ Mock user login """
     mock_user_id = request.args.get('login_as')
     try:
@@ -50,7 +51,7 @@ def get_user():
 
 
 @app.before_request
-def before_request():
+def before_request() -> None:
     """ Adds a user to global object f """
     g.user = get_user()
 

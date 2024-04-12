@@ -3,7 +3,7 @@
 A basic Flask app
 """
 from flask import Flask, render_template, request
-from flask_babel import Babel, _
+from flask_babel import Babel
 
 
 class Config:
@@ -21,8 +21,8 @@ babel = Babel(app)
 
 
 @babel.localeselector
-def get_locale():
-    """Determine what locale to use """
+def get_locale() -> str:
+    """Determine what locale to use"""
     return request.accept_languages.best_match(app.config['LANGUAGES'])
 
 
