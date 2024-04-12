@@ -3,7 +3,7 @@
 A basic Flask app
 """
 from flask import Flask, render_template, request
-from flask_babel import Babel, _
+from flask_babel import Babel
 
 
 class Config:
@@ -24,10 +24,8 @@ babel = Babel(app)
 def get_locale() -> str:
     """Determine what locale to use """
     inc_locale = request.args.get('locale')
-
     if inc_locale in app.config['LANGUAGES']:
         return inc_locale
-
     return request.accept_languages.best_match(app.config['LANGUAGES'])
 
 

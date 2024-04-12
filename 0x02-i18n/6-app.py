@@ -4,6 +4,7 @@ A basic Flask app
 """
 from flask import Flask, render_template, request, g
 from flask_babel import Babel, _
+from typing import Dict, Optional
 
 
 class Config:
@@ -31,9 +32,7 @@ babel = Babel(app)
 @babel.localeselector
 def get_locale() -> str:
     """Determine what locale to use """
-
     inc_locale = request.args.get('locale')
-
     if inc_locale in app.config['LANGUAGES']:
         return inc_locale
     elif g.user and g.user['locale'] in app.config['LANGUAGES']:
@@ -52,7 +51,7 @@ def get_user() -> Optional[Dict]:
 
 @app.before_request
 def before_request() -> None:
-    """ Adds a user to global object f """
+    """ Adds a user to global object g """
     g.user = get_user()
 
 
