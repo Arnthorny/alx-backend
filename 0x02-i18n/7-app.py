@@ -5,6 +5,7 @@ A basic Flask app
 
 from flask import Flask, render_template, request, g
 from flask_babel import Babel, _
+from typing import Dict, Optional
 import pytz
 
 
@@ -31,11 +32,9 @@ babel = Babel(app)
 
 
 @babel.localeselector
-def get_locale():
+def get_locale() -> str:
     """Determine what locale to use """
-
     inc_locale = request.args.get('locale')
-
     if inc_locale in app.config['LANGUAGES']:
         return inc_locale
     elif g.user and g.user['locale'] in app.config['LANGUAGES']:
@@ -59,14 +58,19 @@ def get_timezone():
         return pytz.timezone('UTC')
 
 
-@app.before_request
-def get_user():
+def get_user() -> Optional[Dict]:
     """ Mock user login """
     mock_user_id = request.args.get('login_as')
     try:
-        g.user = users.get(int(mock_user_id))
+        return users.get(int(mock_user_id))
     except (KeyError, ValueError, TypeError):
-        g.user = None
+        return None
+
+
+@app.before_request
+def before_request() -> None:
+    """ Adds a user to global object g """
+    g.user = get_user()
 
 
 @app.route('/')
