@@ -2,7 +2,6 @@
 """
 A basic Flask app
 """
-
 from flask import Flask, render_template, request, g
 from flask_babel import Babel, _
 
@@ -41,14 +40,19 @@ def get_locale():
     return request.accept_languages.best_match(app.config['LANGUAGES'])
 
 
-@app.before_request
 def get_user():
     """ Mock user login """
     mock_user_id = request.args.get('login_as')
     try:
-        g.user = users.get(int(mock_user_id))
+        return users.get(int(mock_user_id))
     except (KeyError, ValueError, TypeError):
-        g.user = None
+        return None
+
+
+@app.before_request
+def before_request():
+    """ Adds a user to global object f """
+    g.user = get_user()
 
 
 @app.route('/')

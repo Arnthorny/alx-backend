@@ -2,7 +2,6 @@
 """
 A basic Flask app
 """
-
 from flask import Flask, render_template
 from flask_babel import Babel
 
@@ -21,10 +20,10 @@ app.config.from_object(Config)
 babel = Babel(app)
 
 
-@babel.localselector
+@babel.localeselector
 def get_locale():
     """Determine what locale to use """
-    request.accept_languages.best_match(app.config.LANGUAGES)
+    request.accept_languages.best_match(app.config['LANGUAGES'])
 
 
 @app.route('/')

@@ -4,7 +4,8 @@ A basic Flask app
 """
 
 from flask import Flask, render_template, request, g
-from flask_babel import Babel, _
+from flask_babel import Babel, _, format_datetime
+from datetime import datetime
 import pytz
 
 
@@ -75,7 +76,9 @@ def get_user():
 @app.route('/')
 def home():
     """Root route"""
-    return render_template('7-index.html', user=g.user)
+    current_time = format_datetime(datetime.now())
+    return render_template('index.html', user=g.user,
+                           current_time=current_time)
 
 
 if __name__ == '__main__':
