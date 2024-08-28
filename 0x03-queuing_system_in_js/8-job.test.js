@@ -29,15 +29,12 @@ describe("createPushNotificationsJobs", function () {
     spyConsole = sinon.spy(console, "log");
   });
 
-  afterEach(() => {
-    spyConsole.restore();
-  });
-
   before(function () {
     queue_obj.testMode.enter(false);
   });
 
   afterEach(function () {
+    spyConsole.restore();
     queue_obj.testMode.clear();
   });
 
@@ -51,7 +48,7 @@ describe("createPushNotificationsJobs", function () {
     );
   });
 
-  it("create two new jobs to the queue", function (done) {
+  it("create two new jobs to the queue", function () {
     createPushNotificationsJobs(listOfJobs, queue_obj);
     expect(queue_obj.testMode.jobs.length).to.equal(2);
 
@@ -61,6 +58,17 @@ describe("createPushNotificationsJobs", function () {
     expect(queue_obj.testMode.jobs[1].data.phoneNumber).to.eql(
       listOfJobs[1].phoneNumber
     );
-    done();
+    queue_obj.testMode.jobs[0].emit("enqueue");
+    queue_obj.testMode.jobs[1].emit("enqueue");
+    expect(
+      spyConsole.calledWith(
+        `Notification job created: ${queue_obj.testMode.jobs[0].id}`
+      )
+    ).is.true;
+    expect(
+      spyConsole.calledWith(
+        `Notification job created: ${queue_obj.testMode.jobs[1].id}`
+      )
+    ).is.true;
   });
 });
